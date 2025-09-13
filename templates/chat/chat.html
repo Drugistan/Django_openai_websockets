@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Chat</title>
+</head>
+<body>
+<h1>AI Chat Assistant</h1>
+<div id="chat-log" style="height:300px; border:1px solid black; overflow:auto;"></div>
+<input id="chat-message-input" type="text" size="100">
+<button id="chat-message-submit">Send</button>
+
+<script>
+const chatSocket = new WebSocket(
+    'ws://' + window.location.host + '/ws/chat/'
+
+);
+console.log("window.location.host")
+chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    const chatLog = document.getElementById('chat-log');
+    chatLog.innerHTML += '<div>' + data.message + '</div>';
+    chatLog.scrollTop = chatLog.scrollHeight;
+};
+
+chatSocket.onclose = function(e) {
+    console.error('Chat socket closed unexpectedly');
+};
+
+document.getElementById('chat-message-submit').onclick = function() {
+    const input = document.getElementById('chat-message-input');
+    chatSocket.send(JSON.stringify({'message': input.value}));
+    input.value = '';
+};
+</script>
+</body>
+</html>
