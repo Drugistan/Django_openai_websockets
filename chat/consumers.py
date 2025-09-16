@@ -24,7 +24,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json['message']
 
         response_type = await self.get_ai_response(message)
-        print(f"📩 Message response_type: {response_type}")
+        print(f" Message response_type: {response_type}")
 
         await self.channel_layer.group_send(
             self.room_group_name,
